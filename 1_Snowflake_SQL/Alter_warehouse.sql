@@ -1,0 +1,10 @@
+ALTER WAREHOUSE compute_wh 
+SET AUTO_SUSPEND = 60;
+
+SHOW WAREHOUSES;
+
+
+
+
+
+

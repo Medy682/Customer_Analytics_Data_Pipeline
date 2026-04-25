@@ -1,0 +1,11 @@
+-- Use the database
+USE DATABASE customer_analytics;
+-- Create schema
+CREATE SCHEMA IF NOT EXISTS raw;
+CREATE SCHEMA IF NOT EXISTS STAGING;
+CREATE SCHEMA IF NOT EXISTS ANALYTICS;
+CREATE SCHEMA IF NOT EXISTS dq;
+--use the schema
+USE SCHEMA raw;
+
+

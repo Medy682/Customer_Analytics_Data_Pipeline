@@ -1,0 +1,9 @@
+snowflake:
+  database: customer_analytics
+  warehouse: compute_wh
+  role: sysadmin
+  schemas:
+    raw: raw
+    staging: staging
+    analytics: analytics
+    data_quality: dq

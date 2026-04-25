@@ -1,0 +1,56 @@
+name: Snowflake Data Pipeline CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  snowflake-deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Install SnowSQL
+      run: |
+        curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-1.2.28-linux_x86_64.bash
+        bash snowsql-1.2.28-linux_x86_64.bash
+
+    - name: Execute Setup Scripts
+      run: |
+        snowsql -a ${{ secrets.SNOWFLAKE_ACCOUNT }} \
+        -u ${{ secrets.SNOWFLAKE_USER }} \
+        -p ${{ secrets.SNOWFLAKE_PASSWORD }} \
+        -f sql/01_setup/setup.sql
+
+    - name: Load Raw Tables
+      run: |
+        snowsql -a ${{ secrets.SNOWFLAKE_ACCOUNT }} \
+        -u ${{ secrets.SNOWFLAKE_USER }} \
+        -p ${{ secrets.SNOWFLAKE_PASSWORD }} \
+        -f sql/02_raw/create_raw_tables.sql
+
+    - name: Run Staging Layer
+      run: |
+        snowsql -a ${{ secrets.SNOWFLAKE_ACCOUNT }} \
+        -u ${{ secrets.SNOWFLAKE_USER }} \
+        -p ${{ secrets.SNOWFLAKE_PASSWORD }} \
+        -f sql/03_staging/staging_transformations.sql
+
+    - name: Run Data Quality Checks
+      run: |
+        snowsql -a ${{ secrets.SNOWFLAKE_ACCOUNT }} \
+        -u ${{ secrets.SNOWFLAKE_USER }} \
+        -p ${{ secrets.SNOWFLAKE_PASSWORD }} \
+        -f sql/04_data_quality/data_quality_checks.sql
+
+    - name: Build Analytics Layer
+      run: |
+        snowsql -a ${{ secrets.SNOWFLAKE_ACCOUNT }} \
+        -u ${{ secrets.SNOWFLAKE_USER }} \
+        -p ${{ secrets.SNOWFLAKE_PASSWORD }} \
+        -f sql/05_analytics/business_insights.sql

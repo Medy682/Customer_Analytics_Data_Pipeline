@@ -1,0 +1,15 @@
+files:
+  country: country_raw.csv
+  customer: customer_raw.csv
+  product: product_raw.csv
+  sales: sales_raw.csv
+
+stage:
+  name: raw_stage
+
+file_format:
+  name: csv_format
+
+load_settings:
+  on_error: continue
+  skip_header: 1
