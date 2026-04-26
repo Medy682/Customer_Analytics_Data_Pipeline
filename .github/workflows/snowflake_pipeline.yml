@@ -28,7 +28,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install snowflake-cli
 
-      - name: Execute Pipeline
+      - name: Run Snwoflake Commands
         run: |
           snow sql -q "USE WAREHOUSE $DB_WH; USE DATABASE $DB_NAME; USE SCHEMA $DB_SCHEMA;"
           snow sql -f sql/01_setup/setup.sql
