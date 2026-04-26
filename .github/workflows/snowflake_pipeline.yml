@@ -7,51 +7,84 @@ on:
 
 jobs:
   snowflake-deploy:
-
     runs-on: ubuntu-latest
 
+    env:
+      SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+      SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+      SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+      SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+      SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
+      SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
+
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-    - name: Checkout Repository
-      uses: actions/checkout@v3
+      # ✅ Stable SnowSQL installation
+      - name: Install SnowSQL
+        run: |
+          set -e
+          curl -L -o snowsql.bash https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-1.2.28-linux_x86_64.bash
+          chmod +x snowsql.bash
+          ./snowsql.bash -y
+          echo "$HOME/.snowsql/bin" >> $GITHUB_PATH
 
-    - name: Install SnowSQL
-      run: | 
-        wget https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-1.2.28-linux_x86_64.bash
-        bash snowsql-1.2.28-linux_x86_64.bash -y
-        echo "$HOME/.snowsql/bin" >> $GITHUB_PATH
+      # ✅ Verify installation (important debugging step)
+      - name: Verify SnowSQL Installation
+        run: snowsql --version
 
-    - name: Execute Setup Scripts
-      run: |
-        snowsql -a ${{ secrets.SNOWFLAKE_ACCOUNT }} \
-        -u ${{ secrets.SNOWFLAKE_USER }} \
-        -p ${{ secrets.SNOWFLAKE_PASSWORD }} \
-        -f sql/01_setup/setup.sql
+      # ✅ Setup Layer
+      - name: Execute Setup Scripts
+        run: |
+          snowsql -a $SNOWFLAKE_ACCOUNT \
+                   -u $SNOWFLAKE_USER \
+                   -p $SNOWFLAKE_PASSWORD \
+                   -w $SNOWFLAKE_WAREHOUSE \
+                   -d $SNOWFLAKE_DATABASE \
+                   -s $SNOWFLAKE_SCHEMA \
+                   -f sql/01_setup/setup.sql
 
-    - name: Load Raw Tables
-      run: |
-        snowsql -a ${{ secrets.SNOWFLAKE_ACCOUNT }} \
-        -u ${{ secrets.SNOWFLAKE_USER }} \
-        -p ${{ secrets.SNOWFLAKE_PASSWORD }} \
-        -f sql/02_raw/create_raw_tables.sql
+      # ✅ Raw Layer
+      - name: Load Raw Tables
+        run: |
+          snowsql -a $SNOWFLAKE_ACCOUNT \
+                   -u $SNOWFLAKE_USER \
+                   -p $SNOWFLAKE_PASSWORD \
+                   -w $SNOWFLAKE_WAREHOUSE \
+                   -d $SNOWFLAKE_DATABASE \
+                   -s $SNOWFLAKE_SCHEMA \
+                   -f sql/02_raw/create_raw_tables.sql
 
-    - name: Run Staging Layer
-      run: |
-        snowsql -a ${{ secrets.SNOWFLAKE_ACCOUNT }} \
-        -u ${{ secrets.SNOWFLAKE_USER }} \
-        -p ${{ secrets.SNOWFLAKE_PASSWORD }} \
-        -f sql/03_staging/staging_transformations.sql
+      # ✅ Staging Layer
+      - name: Run Staging Layer
+        run: |
+          snowsql -a $SNOWFLAKE_ACCOUNT \
+                   -u $SNOWFLAKE_USER \
+                   -p $SNOWFLAKE_PASSWORD \
+                   -w $SNOWFLAKE_WAREHOUSE \
+                   -d $SNOWFLAKE_DATABASE \
+                   -s $SNOWFLAKE_SCHEMA \
+                   -f sql/03_staging/staging_transformations.sql
 
-    - name: Run Data Quality Checks
-      run: |
-        snowsql -a ${{ secrets.SNOWFLAKE_ACCOUNT }} \
-        -u ${{ secrets.SNOWFLAKE_USER }} \
-        -p ${{ secrets.SNOWFLAKE_PASSWORD }} \
-        -f sql/04_data_quality/data_quality_checks.sql
+      # ✅ Data Quality
+      - name: Run Data Quality Checks
+        run: |
+          snowsql -a $SNOWFLAKE_ACCOUNT \
+                   -u $SNOWFLAKE_USER \
+                   -p $SNOWFLAKE_PASSWORD \
+                   -w $SNOWFLAKE_WAREHOUSE \
+                   -d $SNOWFLAKE_DATABASE \
+                   -s $SNOWFLAKE_SCHEMA \
+                   -f sql/04_data_quality/data_quality_checks.sql
 
-    - name: Build Analytics Layer
-      run: |
-        snowsql -a ${{ secrets.SNOWFLAKE_ACCOUNT }} \
-        -u ${{ secrets.SNOWFLAKE_USER }} \
-        -p ${{ secrets.SNOWFLAKE_PASSWORD }} \
-        -f sql/05_analytics/business_insights.sql
+      # ✅ Analytics Layer
+      - name: Build Analytics Layer
+        run: |
+          snowsql -a $SNOWFLAKE_ACCOUNT \
+                   -u $SNOWFLAKE_USER \
+                   -p $SNOWFLAKE_PASSWORD \
+                   -w $SNOWFLAKE_WAREHOUSE \
+                   -d $SNOWFLAKE_DATABASE \
+                   -s $SNOWFLAKE_SCHEMA \
+                   -f sql/05_analytics/business_insights.sql
