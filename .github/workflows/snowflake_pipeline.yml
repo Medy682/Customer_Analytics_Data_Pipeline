@@ -31,6 +31,7 @@ jobs:
         run: |
           # Test connection (good practice)
           snow sql \
+            --temporary-connection \
             --account "$SNOWFLAKE_ACCOUNT" \
             --user "$SNOWFLAKE_USER" \
             --password "$SNOWFLAKE_PASSWORD" \
@@ -42,6 +43,7 @@ jobs:
 
           # Set context explicitly
           snow sql \
+            --temporary-connection \
             --account "$SNOWFLAKE_ACCOUNT" \
             --user "$SNOWFLAKE_USER" \
             --password "$SNOWFLAKE_PASSWORD" \
@@ -53,6 +55,7 @@ jobs:
 
           # Run SQL scripts
           snow sql \
+            --temporary-connection \
             --account "$SNOWFLAKE_ACCOUNT" \
             --user "$SNOWFLAKE_USER" \
             --password "$SNOWFLAKE_PASSWORD" \
@@ -63,6 +66,7 @@ jobs:
             -f sql/01_setup/setup.sql
 
           snow sql \
+            --temporary-connection \
             --account "$SNOWFLAKE_ACCOUNT" \
             --user "$SNOWFLAKE_USER" \
             --password "$SNOWFLAKE_PASSWORD" \
@@ -73,6 +77,7 @@ jobs:
             -f sql/02_raw/create_raw_tables.sql
 
           snow sql \
+            --temporary-connection \
             --account "$SNOWFLAKE_ACCOUNT" \
             --user "$SNOWFLAKE_USER" \
             --password "$SNOWFLAKE_PASSWORD" \
@@ -83,6 +88,7 @@ jobs:
             -f sql/03_staging/staging_transformations.sql
 
           snow sql \
+            --temporary-connection \
             --account "$SNOWFLAKE_ACCOUNT" \
             --user "$SNOWFLAKE_USER" \
             --password "$SNOWFLAKE_PASSWORD" \
@@ -93,6 +99,7 @@ jobs:
             -f sql/04_data_quality/data_quality_checks.sql
 
           snow sql \
+            --temporary-connection \
             --account "$SNOWFLAKE_ACCOUNT" \
             --user "$SNOWFLAKE_USER" \
             --password "$SNOWFLAKE_PASSWORD" \
