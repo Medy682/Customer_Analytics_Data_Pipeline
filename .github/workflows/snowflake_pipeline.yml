@@ -10,14 +10,13 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      # These specific names are recognized automatically by Snowflake CLI
       SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
       SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
       SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
-      # Standard vars for our query
-      DB_WH: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
-      DB_NAME: ${{ secrets.SNOWFLAKE_DATABASE }}
-      DB_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
+      SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
+      SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+      SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
+      SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
 
     steps:
       - name: Checkout Repository
@@ -29,15 +28,18 @@ jobs:
           pip install snowflake-cli
 
       - name: Run Snowflake Commands
-
-        env:
-          SNOWFLAKE_CONNECTIONS_DEFAULT_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-          SNOWFLAKE_CONNECTIONS_DEFAULT_USER: ${{ secrets.SNOWFLAKE_USER }}
-          SNOWFLAKE_CONNECTIONS_DEFAULT_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
-
-
         run: |
-          snow sql -q "USE WAREHOUSE $DB_WH; USE DATABASE $DB_NAME; USE SCHEMA $DB_SCHEMA;"
+          snow connection add \
+            --account $SNOWFLAKE_ACCOUNT \
+            --user $SNOWFLAKE_USER \
+            --password $SNOWFLAKE_PASSWORD \
+            --role $SNOWFLAKE_ROLE \
+            --warehouse $SNOWFLAKE_WAREHOUSE \
+            --database $SNOWFLAKE_DATABASE \
+            --schema $SNOWFLAKE_SCHEMA \
+            --connection-name default
+
+          snow sql -q "USE WAREHOUSE $SNOWFLAKE_WAREHOUSE; USE DATABASE $SNOWFLAKE_DATABASE; USE SCHEMA $SNOWFLAKE_SCHEMA;"
           snow sql -f sql/01_setup/setup.sql
           snow sql -f sql/02_raw/create_raw_tables.sql
           snow sql -f sql/03_staging/staging_transformations.sql
