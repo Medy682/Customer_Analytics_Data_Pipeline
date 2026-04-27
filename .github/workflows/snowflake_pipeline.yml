@@ -28,7 +28,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install snowflake-cli
 
-      - name: Run Snwoflake Commands
+      - name: Run Snowflake Commands
 
         env:
           SNOWFLAKE_CONNECTIONS_DEFAULT_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
