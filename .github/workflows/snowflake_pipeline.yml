@@ -63,7 +63,7 @@ jobs:
             --warehouse "$SNOWFLAKE_WAREHOUSE" \
             --database "$SNOWFLAKE_DATABASE" \
             --schema "$SNOWFLAKE_SCHEMA" \
-            -f sql/01_setup/setup.sql
+            -f sql/1_setup/01_create_database.sql
 
           snow sql \
             --temporary-connection \
@@ -74,7 +74,7 @@ jobs:
             --warehouse "$SNOWFLAKE_WAREHOUSE" \
             --database "$SNOWFLAKE_DATABASE" \
             --schema "$SNOWFLAKE_SCHEMA" \
-            -f sql/02_raw/create_raw_tables.sql
+            -f sql/5_raw/08_create_raw_tables.sql
 
           snow sql \
             --temporary-connection \
@@ -85,7 +85,7 @@ jobs:
             --warehouse "$SNOWFLAKE_WAREHOUSE" \
             --database "$SNOWFLAKE_DATABASE" \
             --schema "$SNOWFLAKE_SCHEMA" \
-            -f sql/03_staging/staging_transformations.sql
+            -f sql/6_staging/10_staging_transformations.sql
 
           snow sql \
             --temporary-connection \
@@ -96,7 +96,7 @@ jobs:
             --warehouse "$SNOWFLAKE_WAREHOUSE" \
             --database "$SNOWFLAKE_DATABASE" \
             --schema "$SNOWFLAKE_SCHEMA" \
-            -f sql/04_data_quality/data_quality_checks.sql
+            -f sql/7_data_quality/11_data_quality_checks.sql
 
           snow sql \
             --temporary-connection \
@@ -107,4 +107,4 @@ jobs:
             --warehouse "$SNOWFLAKE_WAREHOUSE" \
             --database "$SNOWFLAKE_DATABASE" \
             --schema "$SNOWFLAKE_SCHEMA" \
-            -f sql/05_analytics/business_insights.sql
+            -f sql/8_analytics/12_analytics.sql
