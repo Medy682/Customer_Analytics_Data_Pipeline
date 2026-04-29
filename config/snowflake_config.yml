@@ -1,7 +1,7 @@
 snowflake:
   database: customer_analytics
   warehouse: compute_wh
-  role: sysadmin
+  role: accountadmin
   schemas:
     raw: raw
     staging: staging
