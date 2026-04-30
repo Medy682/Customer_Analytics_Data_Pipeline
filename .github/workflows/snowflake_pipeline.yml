@@ -16,7 +16,6 @@ jobs:
       SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
       SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
       SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
-      # We use the secret directly in the shell script below
 
     steps:
       - name: Checkout Repository
@@ -31,99 +30,38 @@ jobs:
         env:
           PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
         run: |
-          # 1. Save the Private Key to a file
+          # 1. Prepare Key
           echo "$PRIVATE_KEY" > rsa_key.p8
           chmod 600 rsa_key.p8
 
-          # 2. Run commands using JWT (Bypasses MFA)
-          # Note: We REMOVED --password and ADDED --authenticator and --private-key-path
+          # 2. Test Connection
+          snow sql --temporary-connection --authenticator SNOWFLAKE_JWT --account "$SNOWFLAKE_ACCOUNT" --user "$SNOWFLAKE_USER" --private-key-path rsa_key.p8 -q "SELECT CURRENT_VERSION();"
 
-          # 3. Test connection (Using Private Key)
-          snow sql \
-            --temporary-connection \
-            --authenticator SNOWFLAKE_JWT \
-            --account "$SNOWFLAKE_ACCOUNT" \
-            --user "$SNOWFLAKE_USER" \
-            --private-key-path rsa_key.p8 \
-            --role "$SNOWFLAKE_ROLE" \
-            --warehouse "$SNOWFLAKE_WAREHOUSE" \
-            --database "$SNOWFLAKE_DATABASE" \
-            --schema "$SNOWFLAKE_SCHEMA" \
-            -q "SELECT CURRENT_VERSION();"
+          # 3. Setup Database & Schemas (Folders 1 & 2)
+          snow sql --temporary-connection --authenticator SNOWFLAKE_JWT --account "$SNOWFLAKE_ACCOUNT" --user "$SNOWFLAKE_USER" --private-key-path rsa_key.p8 -f snowflake/1_setup/01_create_database.sql
+          snow sql --temporary-connection --authenticator SNOWFLAKE_JWT --account "$SNOWFLAKE_ACCOUNT" --user "$SNOWFLAKE_USER" --private-key-path rsa_key.p8 -f snowflake/2_create_schemas/02_create_schemas.sql
 
-          # 4. Set context explicitly
-          snow sql \
-            --temporary-connection \
-            --authenticator SNOWFLAKE_JWT \
-            --account "$SNOWFLAKE_ACCOUNT" \
-            --user "$SNOWFLAKE_USER" \
-            --private-key-path rsa_key.p8 \
-            --role "$SNOWFLAKE_ROLE" \
-            --warehouse "$SNOWFLAKE_WAREHOUSE" \
-            --database "$SNOWFLAKE_DATABASE" \
-            --schema "$SNOWFLAKE_SCHEMA" \
-            -q "USE WAREHOUSE $SNOWFLAKE_WAREHOUSE; USE DATABASE $SNOWFLAKE_DATABASE; USE SCHEMA $SNOWFLAKE_SCHEMA;"
+          # 4. External Stages (Folder 3)
+          snow sql --temporary-connection --authenticator SNOWFLAKE_JWT --account "$SNOWFLAKE_ACCOUNT" --user "$SNOWFLAKE_USER" --private-key-path rsa_key.p8 -f snowflake/3_external_stage/03_create_stage.sql
+          snow sql --temporary-connection --authenticator SNOWFLAKE_JWT --account "$SNOWFLAKE_ACCOUNT" --user "$SNOWFLAKE_USER" --private-key-path rsa_key.p8 -f snowflake/3_external_stage/04_create_file_format.sql
 
-          # 5. Run SQL scripts
-          snow sql \
-            --temporary-connection \
-            --authenticator SNOWFLAKE_JWT \
-            --account "$SNOWFLAKE_ACCOUNT" \
-            --user "$SNOWFLAKE_USER" \
-            --private-key-path rsa_key.p8 \
-            --role "$SNOWFLAKE_ROLE" \
-            --warehouse "$SNOWFLAKE_WAREHOUSE" \
-            --database "$SNOWFLAKE_DATABASE" \
-            --schema "$SNOWFLAKE_SCHEMA" \
-            -f snowflake/1_setup/01_create_database.sql
+          # 5. Metadata & Logging (Folder 4)
+          snow sql --temporary-connection --authenticator SNOWFLAKE_JWT --account "$SNOWFLAKE_ACCOUNT" --user "$SNOWFLAKE_USER" --private-key-path rsa_key.p8 -f snowflake/4_metadata/05_create_logging_tables.sql
+          snow sql --temporary-connection --authenticator SNOWFLAKE_JWT --account "$SNOWFLAKE_ACCOUNT" --user "$SNOWFLAKE_USER" --private-key-path rsa_key.p8 -f snowflake/4_metadata/06_create_metadata_tables.sql
+          snow sql --temporary-connection --authenticator SNOWFLAKE_JWT --account "$SNOWFLAKE_ACCOUNT" --user "$SNOWFLAKE_USER" --private-key-path rsa_key.p8 -f snowflake/4_metadata/07_create_dq_results_tables.sql
 
-          snow sql \
-            --temporary-connection \
-            --authenticator SNOWFLAKE_JWT \
-            --account "$SNOWFLAKE_ACCOUNT" \
-            --user "$SNOWFLAKE_USER" \
-            --private-key-path rsa_key.p8 \
-            --role "$SNOWFLAKE_ROLE" \
-            --warehouse "$SNOWFLAKE_WAREHOUSE" \
-            --database "$SNOWFLAKE_DATABASE" \
-            --schema "$SNOWFLAKE_SCHEMA" \
-            -f snowflake/5_raw/08_create_raw_tables.sql
+          # 6. Raw Data (Folder 5)
+          snow sql --temporary-connection --authenticator SNOWFLAKE_JWT --account "$SNOWFLAKE_ACCOUNT" --user "$SNOWFLAKE_USER" --private-key-path rsa_key.p8 -f snowflake/5_raw/08_create_raw_tables.sql
+          snow sql --temporary-connection --authenticator SNOWFLAKE_JWT --account "$SNOWFLAKE_ACCOUNT" --user "$SNOWFLAKE_USER" --private-key-path rsa_key.p8 -f snowflake/5_raw/09_load_data_into_raw_tables.sql
 
-          snow sql \
-            --temporary-connection \
-            --authenticator SNOWFLAKE_JWT \
-            --account "$SNOWFLAKE_ACCOUNT" \
-            --user "$SNOWFLAKE_USER" \
-            --private-key-path rsa_key.p8 \
-            --role "$SNOWFLAKE_ROLE" \
-            --warehouse "$SNOWFLAKE_WAREHOUSE" \
-            --database "$SNOWFLAKE_DATABASE" \
-            --schema "$SNOWFLAKE_SCHEMA" \
-            -f snowflake/6_staging/10_staging_transformations.sql
+          # 7. Transformations (Folder 6)
+          snow sql --temporary-connection --authenticator SNOWFLAKE_JWT --account "$SNOWFLAKE_ACCOUNT" --user "$SNOWFLAKE_USER" --private-key-path rsa_key.p8 -f snowflake/6_staging/10_staging_transformations.sql
 
-          snow sql \
-            --temporary-connection \
-            --authenticator SNOWFLAKE_JWT \
-            --account "$SNOWFLAKE_ACCOUNT" \
-            --user "$SNOWFLAKE_USER" \
-            --private-key-path rsa_key.p8 \
-            --role "$SNOWFLAKE_ROLE" \
-            --warehouse "$SNOWFLAKE_WAREHOUSE" \
-            --database "$SNOWFLAKE_DATABASE" \
-            --schema "$SNOWFLAKE_SCHEMA" \
-            -f snowflake/7_data_quality/11_data_quality_checks.sql
+          # 8. Quality & Analytics (Folders 7 & 8)
+          snow sql --temporary-connection --authenticator SNOWFLAKE_JWT --account "$SNOWFLAKE_ACCOUNT" --user "$SNOWFLAKE_USER" --private-key-path rsa_key.p8 -f snowflake/7_data_quality/11_data_quality_checks.sql
+          snow sql --temporary-connection --authenticator SNOWFLAKE_JWT --account "$SNOWFLAKE_ACCOUNT" --user "$SNOWFLAKE_USER" --private-key-path rsa_key.p8 -f snowflake/8_analytics/12_analytics.sql
 
-          snow sql \
-            --temporary-connection \
-            --authenticator SNOWFLAKE_JWT \
-            --account "$SNOWFLAKE_ACCOUNT" \
-            --user "$SNOWFLAKE_USER" \
-            --private-key-path rsa_key.p8 \
-            --role "$SNOWFLAKE_ROLE" \
-            --warehouse "$SNOWFLAKE_WAREHOUSE" \
-            --database "$SNOWFLAKE_DATABASE" \
-            --schema "$SNOWFLAKE_SCHEMA" \
-            -f snowflake/8_analytics/12_analytics.sql
-
-          # 6. Cleanup key for security
+          # 9. Cleanup
           rm rsa_key.p8
+
+          
