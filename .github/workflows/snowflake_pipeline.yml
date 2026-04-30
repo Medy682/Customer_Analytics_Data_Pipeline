@@ -37,6 +37,7 @@ jobs:
 
           # 2. Test connection (Using Private Key)
           snow sql \
+            --temporary-connection \
             --authenticator SNOWFLAKE_JWT \
             --account "$SNOWFLAKE_ACCOUNT" \
             --user "$SNOWFLAKE_USER" \
@@ -49,6 +50,7 @@ jobs:
 
           # 3. Set context explicitly
           snow sql \
+            --temporary-connection \
             --authenticator SNOWFLAKE_JWT \
             --account "$SNOWFLAKE_ACCOUNT" \
             --user "$SNOWFLAKE_USER" \
@@ -61,6 +63,7 @@ jobs:
 
           # 4. Run SQL scripts
           snow sql \
+            --temporary-connection \
             --authenticator SNOWFLAKE_JWT \
             --account "$SNOWFLAKE_ACCOUNT" \
             --user "$SNOWFLAKE_USER" \
@@ -72,6 +75,7 @@ jobs:
             -f snowflake/1_setup/01_create_database.sql
 
           snow sql \
+            --temporary-connection \
             --authenticator SNOWFLAKE_JWT \
             --account "$SNOWFLAKE_ACCOUNT" \
             --user "$SNOWFLAKE_USER" \
@@ -83,6 +87,7 @@ jobs:
             -f snowflake/5_raw/08_create_raw_tables.sql
 
           snow sql \
+            --temporary-connection \
             --authenticator SNOWFLAKE_JWT \
             --account "$SNOWFLAKE_ACCOUNT" \
             --user "$SNOWFLAKE_USER" \
@@ -94,6 +99,7 @@ jobs:
             -f snowflake/6_staging/10_staging_transformations.sql
 
           snow sql \
+            --temporary-connection \
             --authenticator SNOWFLAKE_JWT \
             --account "$SNOWFLAKE_ACCOUNT" \
             --user "$SNOWFLAKE_USER" \
@@ -105,6 +111,7 @@ jobs:
             -f snowflake/7_data_quality/11_data_quality_checks.sql
 
           snow sql \
+            --temporary-connection \
             --authenticator SNOWFLAKE_JWT \
             --account "$SNOWFLAKE_ACCOUNT" \
             --user "$SNOWFLAKE_USER" \
