@@ -24,7 +24,7 @@ CREATE OR REPLACE TABLE raw.products (
     updated_at   STRING
 );
 
-CREATE TABLE raw.country (
+CREATE TABLE IF NOT EXISTS raw.country (
     code CHAR(2) PRIMARY KEY,
     name STRING
 );
