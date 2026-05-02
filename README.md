@@ -188,15 +188,25 @@ On top of the dimensional model, several Analytical views were created to answer
 Examples include:
 
 ✅ Sales by country
+
 ✅ Sales by category
+
 ✅ Sales by date
+
 ✅ Top customers by revenue
+
 ✅ Number of orders per customer
+
 ✅ Average order value per customer
+
 ✅ Top 5 best-selling products
+
 ✅ Quantity sold per product
+
 ✅ Yearly sales trends
+
 ✅ Year-over-year sales change
+
 
 A global KPI summary view was also created to provide high-level business metrics.
 
@@ -366,13 +376,15 @@ snowflake-data-pipeline
 
 ![Architecture](docs/Architecture.png)
 
+
 ##  🔄 ELT Workflow
 
-![ELT Workflow](docs/ELT_workflow.png)
+![ELT_Workflow](docs/ELT_workflow.png)
+
 
 ##  ⚙️ ADF Pipeline
 
-![adf pipeline orchestration diagram](docs/adf_pipeline_orchestration_diagram.png)
+![adf_pipeline_orchestration_diagram](docs/adf_pipeline_orchestration_diagram.png)
 
 
 Monitoring & Observability
