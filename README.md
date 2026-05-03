@@ -113,14 +113,14 @@ Analytics-ready datasets
 
 Technology	                  Purpose
 
-Snowflake	                    Cloud data warehouse used for storage and transformations
-SQL	                          Data cleaning, transformation, and modeling
-Azure Data Factory	          Pipeline orchestration and scheduling
-Git                           version control system
-GitHub	                      hosting platform for git projects or repositories and documentation
-GitHub Actions	              CI/CD automation for validating SQL scripts
-YAML	                        Pipeline configuration files
-CSV	                          Raw input datasets 
+• Snowflake:	                  Cloud data warehouse used for storage and transformations
+• SQL:	                          Data cleaning, transformation, and modeling
+• Azure Data Factory:	          Pipeline orchestration and scheduling
+• Git:                            version control system
+• GitHub:	                  hosting platform for git projects or repositories and documentation
+• GitHub Actions:	          CI/CD automation for validating SQL scripts
+• YAML:	                          Pipeline configuration files
+• CSV:	                          Raw input datasets 
 
 
 ✔ Data Pipeline Layers
@@ -289,86 +289,70 @@ This includes:
 
 Separating configuration from code improves maintainability and scalability.
 
-✔ Repository Structure
-
-snowflake-data-pipeline
 
 
+## 📂 Repository Structure
+
+```text
+Customer_Analytics_Data_pipeline
 ├── .github/
 │   └── workflows/
 │       └── snowflake_pipeline.yml
-│ 
 ├── adf/
 │   ├── linked_services/
 │   └── pipelines/
-│ 
 ├── config/
 │   ├── snowflake_config.yml
 │   ├── pipeline_config.yml
 │   └── .env.example
-│
 ├── data/
 │   └── raw/
 │       ├── country_raw.csv
 │       ├── customer_raw.csv
 │       ├── product_raw.csv
 │       └── sales_raw.csv
-│
 ├── docs/
 │   ├── architecture.png
 │   ├── elt_workflow.png
 │   └── adf_pipeline_orchestration_diagram.png
-│ 
 ├── screenshots/
-│   
-│ 
+│   └── (25+ project screenshots)
 ├── snowflake_sql/
-│  
 │   ├── Query_run/
 │   │   └── Alter_warehouse.sql
-│
 │   ├── 1_setup/
 │   │   └── 01_create_database.sql
-│
 │   ├── 2_schemas/
 │   │   └── 02_create_schemas.sql
-│
 │   ├── 3_external_stage/
 │   │   ├── 03_create_stage.sql
 │   │   └── 04_create_file_format.sql
-│
 │   ├── 4_metadata/
 │   │   ├── 05_create_logging_tables.sql
 │   │   ├── 06_create_metadata_tables.sql
 │   │   └── 07_create_dq_results_tables.sql
-│
 │   ├── 5_raw/
 │   │   ├── 08_create_raw_tables.sql
 │   │   └── 09_load_data_into_raw_tables.sql
-│
 │   ├── 6_staging/
 │   │   └── 10_staging_transformations.sql
-│
 │   ├── 7_data_quality/
 │   │   └── 11_data_quality_checks.sql
-│
 │   ├── 8_analytics/
 │   │   └── 12_analytics.sql
-│
-│   ├── 9_incremental/
-│   │   ├── 13_get_watermark.sql
-│   │   ├── 14_incremental_extract.sql
-│   │   ├── 15_merge_sales.sql
-│   │   └── 16_update_watermark.sql
-│
+│   └── 9_incremental/
+│       ├── 13_get_watermark.sql
+│       ├── 14_incremental_extract.sql
+│       ├── 15_merge_sales.sql
+│       └── 16_update_watermark.sql
 ├── tests/
-│     └──data quality/
-│           ├── test_null_values.sql
-│           ├── test_duplicates.sql
-│           ├── test_row_counts.sql
-│           └── test_table_exists.sql
-│
+│   └── data_quality/
+│       ├── test_null_values.sql
+│       ├── test_duplicates.sql
+│       ├── test_row_counts.sql
+│       └── test_table_exists.sql
 └── README.md
+```
 
 
 
@@ -387,14 +371,14 @@ snowflake-data-pipeline
 ![adf_pipeline_orchestration_diagram](docs/adf_pipeline_orchestration_diagram.png)
 
 
-Monitoring & Observability
+✔ Monitoring & Observability
 
 Pipeline monitoring is supported through logging tables that capture pipeline errors and execution metadata.
 
 These logs allow engineers to audit pipeline execution and diagnose failures.
 This modular structure ensures the project remains organized, scalable, and easy to maintain.
 
-Python Automation 
+✔ Python Automation 
 
 While a Python-based automation layer could be integrated into this workflow, it is considered an optional enhancement for this specific project.
 This Layer was intentionally excluded to maintain a streamlined architecture, as Python automation typically serves more advanced requirements, such as: 
@@ -426,12 +410,14 @@ Junior Data Engineer
 
 Focused on:
 
-Data engineering
-Data analytics
-Machine learning
-Data-driven decision making
+• Data engineering
+• Data analytics
+• Machine learning
+• Data-driven decision making
+
 
 Usage & Attribution: This project is shared for educational and portfolio purposes.
 If reused or adapted, appropriate credit must be given to the author.
+
 
 📰This project is part of my personal data science and analytics portfolio ✅
