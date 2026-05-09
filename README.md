@@ -379,6 +379,26 @@ Customer_Analytics_Data_pipeline
 ![adf_pipeline_orchestration_diagram](docs/adf_pipeline_orchestration_diagram.png)
 
 
+##  ⚒ Orchestration 
+
+###  ✅ adf_pipeline_runs
+
+![adf_pipeline_runs](adf/screenshots/adf_pipeline_runs.png)
+
+###  ✅ adf_trigger_runs
+
+![adf_trigger_runs](adf/screenshots/adf_trigger_runs.png)
+
+###  ✅ Snowflake linked service success
+
+![Snowflake linked service success](adf/screenshots/snowflake_linked_service.png)
+
+###  ✅ Key Vault integration
+
+![Key Vault integration](adf/screenshots/key_vault_linked_service.png)
+
+
+
 ✔ Monitoring & Observability
 
 Pipeline monitoring is supported through logging tables that capture pipeline errors and execution metadata.
