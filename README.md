@@ -300,7 +300,15 @@ Customer_Analytics_Data_pipeline
 │       └── snowflake_pipeline.yml
 ├── adf/
 │   ├── linked_services/
-│   └── pipelines/
+│   ├── pipelines/
+│   └── screenshots/
+│        ├── adf_pipeline_runs.png
+│        ├── adf_trigger_runs.png
+│        ├── key_vault_linked_service.png 
+│        ├── orchestration_monitoring.png
+│        ├── snowflake_linked_service.png
+│        └── successful_pipeline_execution.png
+│
 ├── config/
 │   ├── snowflake_config.yml
 │   ├── pipeline_config.yml
