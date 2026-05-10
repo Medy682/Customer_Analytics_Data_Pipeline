@@ -2,281 +2,269 @@
 # Snowflake Data Pipeline CI/CD [![Snowflake Data Pipeline CI/CD](https://github.com/Medy682/Customer_Analytics_Data_Pipeline/actions/workflows/snowflake_pipeline.yml/badge.svg)](https://github.com/Medy682/Customer_Analytics_Data_Pipeline/actions/workflows/snowflake_pipeline.yml)
 
 
-Customer Analytics Data Pipeline
-
 Author: Kidima Medy Masuka 
 
 Date: 2026
 
-# 🚀 Customer Data Analytics Pipeline
+# 🚀 Customer Analytics Data Pipeline
 
-## ✔ Project Overview
-
-The Customer Data Analytics Pipeline is an end-to-end ELT data engineering solution designed to ingest, process, transform, and analyze customer sales data using a modern cloud data stack.
+The Customer Analytics Data Pipeline is an end-to-end ELT data engineering solution designed to ingest, process, transform, and analyze customer sales data using a modern cloud data stack.
 
 In this project, I designed and deployed a complete Snowflake-based ELT pipeline integrated with Azure Data Factory, Azure Key Vault, and GitHub Actions CI/CD automation. The solution was built using enterprise-style cloud data engineering practices with a strong focus on orchestration, security, automation, reliability, and production-ready deployment workflows.
 
-I implemented:
+---
 
-* Snowflake cloud data warehousing
+# 📌 Project Overview
 
-* Azure Data Factory orchestration
+This pipeline was designed using a layered ELT architecture with a strong focus on:
 
-* Azure Key Vault secret management
+- Cloud data warehousing
+- Workflow orchestration
+- CI/CD automation
+- Incremental loading
+- Data quality validation
+- Secure credential management
+- Analytics-ready dimensional modeling
 
-* RSA key-pair authentication
+The solution uses Snowflake for data warehousing, Azure Data Factory for orchestration, Azure Key Vault for secret management, and GitHub Actions for automated deployment workflows.
 
-* GitHub Actions CI/CD automation
+---
 
-* Incremental loading using CDC and watermarking
+# ⚡ Key Features
 
-* Secure credential and secret handling
+✅ Snowflake cloud data warehouse
 
-* Scheduled trigger orchestration
+✅ Azure Data Factory orchestration
 
-* Multi-layer data validation and monitoring
+✅ GitHub Actions CI/CD pipeline
 
-One of the key achievements in this project was successfully implementing idempotent SQL deployment scripts and standardized object creation logic to eliminate environment-specific SQL compilation failures such as "Object Already Exists" errors. This resulted in a stable, fully automated “green-light” CI/CD deployment workflow with reliable repeatable deployments.
+✅ Azure Key Vault integration
 
+✅ RSA key-pair authentication
 
-# 🏗️ Architecture & Flow
+✅ Incremental loading using watermarking and CDC
 
-The pipeline leverages Snowflake as the cloud data warehouse. Data is extracted from CSV source files, ingested into a Raw Layer, and progressively transformed through:
+✅ Data quality validation checks
 
-* a Staging Layer for cleaning and preparation,
+✅ Layered ELT architecture
 
-* and an Analytics Layer for reporting and business insights.
+✅ Star schema dimensional modeling
 
-The final Analytics Layer utilizes Dimensional Modelling (Star Schema) to support analytical querying, optimized reporting performance, and actionable business intelligence.
+✅ Automated deployment workflows
 
-Azure Data Factory was used to orchestrate and schedule the complete workflow end-to-end, while Azure Key Vault securely managed secrets and RSA private keys used for Snowflake authentication.
+---
 
+# 📊 Architecture Diagram
 
-# 🛠️ Core Engineering Practices
+![Architecture](docs/Architecture.png)
 
-## ➡ Idempotency & Deployment Reliability
+---
 
+# 🔄 ELT Workflow
 
-One of the biggest engineering challenges I solved in this project was fixing repeated database deployment failures in the CI/CD pipeline.
+![ELT_Workflow](docs/ELT_workflow.png)
 
-The problem was that the automated deployment scripts kept failing whenever they attempted to create database objects that already existed in Snowflake. This caused frequent SQL compilation errors such as:
+---
 
-* `"Object Already Exists"`
-* schema conflicts,
-* and inconsistent deployment behavior across environments.
+# ⚙️ ADF Pipeline Orchestration
 
-To solve this, I redesigned and standardized the SQL object creation scripts using `IF NOT EXISTS` logic and repeatable deployment patterns. Instead of blindly creating objects every time, the scripts now first check the database state before making changes.
+![adf_pipeline_orchestration_diagram](docs/adf_pipeline_orchestration_diagram.png)
 
-In simple terms, I fixed the deployment process by making the scripts “smart enough” to verify whether an object already exists before trying to create it again.
+---
 
-This transformed the deployment workflow from:
+# 🚀 Quick Start
 
-* a fragile, manual troubleshooting process,
-  into:
-* a stable, reliable, fully automated “green-light” CI/CD system.
+## 1️⃣ Clone the Repository
+
+```bash
+git clone https://github.com/Medy682/Customer_Analytics_Data_Pipeline.git
+cd Customer_Analytics_Data_Pipeline
+```
+
+## 2️⃣ Configure Environment Variables
+
+Update the configuration files inside the `config/` folder:
+
+- `.env.example`
+- `snowflake_config.yml`
+- `pipeline_config.yml`
+
+Add your:
+
+- Snowflake credentials
+- Azure configuration
+- Key Vault details
+
+### Example `.env.example`
+
+```env
+SNOWFLAKE_USER=your_username
+SNOWFLAKE_ACCOUNT=your_account
+KEY_VAULT_NAME=your_key_vault
+```
+---
+
+## 3️⃣ Upload Raw CSV Files
+
+Place source datasets inside:
+
+```text
+data/raw/
+```
+
+---
+
+## 4️⃣ Run Snowflake SQL Scripts
+
+Execute SQL scripts in sequence:
+
+```text
+1_setup/
+2_schemas/
+3_external_stage/
+4_metadata/
+5_raw/
+6_staging/
+7_data_quality/
+8_analytics/
+9_incremental/
+```
+
+---
+
+## 5️⃣ Trigger the Pipeline
+
+Run the Azure Data Factory pipeline manually or through scheduled triggers.
+
+---
+
+# 🛠️ Technologies Used
+
+| Technology | Purpose |
+|---|---|
+| Snowflake | Cloud data warehouse |
+| SQL |  Data transformation and modeling |
+| Azure Data Factory |  Pipeline orchestration |
+| Azure Key Vault |  Secret management |
+| GitHub Actions |  CI/CD automation |
+| Git & GitHub |  Version control and repository hosting |
+| YAML |  Pipeline configuration |
+| CSV |  Raw source datasets |
+
+---
+
+# 🏗️ Data Pipeline Architecture
+
+The pipeline follows a layered ELT architecture:
+
+```text
+Raw CSV Data
+      │
+      ▼
+RAW Schema
+      │
+      ▼
+STAGING Schema
+(Cleaning & Standardization)
+      │
+      ▼
+ANALYTICS Schema
+(Star Schema Modeling)
+      │
+      ▼
+Fact & Dimension Tables
+      │
+      ▼
+Business Analytics Views
+```
+
+Supporting schemas:
+
+### DATA_QUALITY
+- Null checks
+- Duplicate checks
+- Schema validation
+- Data consistency validation
+
+### METADATA
+- Watermark tracking
+- Pipeline logging
+- Audit tables
+
+---
+
+# 🔁 Incremental Loading & CDC
+
+The project implements incremental loading using:
+
+- Watermark tables
+- CDC logic
+- MERGE operations
+
+This allows the pipeline to process only new or updated records while improving efficiency and scalability.
+
+---
+
+# 🔐 Security & Authentication
+
+The pipeline uses:
+
+- RSA key-pair authentication
+- Azure Key Vault secret storage
+- Azure Managed Identity integration
+
+This enables secure automated authentication without exposing credentials directly in code.
+
+---
+
+# ⚙️ CI/CD Automation
+
+I improved deployment reliability by implementing idempotent SQL deployment logic using IF NOT EXISTS statements and repeatable deployment patterns. This resolved Snowflake object creation conflicts and prevented repeated CI/CD deployment failures.
 
 As a result:
 
-* deployment scripts can now run repeatedly without failure,
+deployment scripts run consistently without failure,
+GitHub Actions deployments became more reliable,
+and SQL compilation conflicts across environments were eliminated.
 
-* GitHub Actions deployments execute successfully and consistently,
+# ✅ Data Quality Validation
 
-* environment-specific SQL compilation issues were eliminated,
-
-* and the overall deployment reliability of the pipeline improved significantly.
-
-This was a major improvement because it made the entire ELT deployment process production-ready, fault-tolerant, and scalable for continuous integration and automated orchestration workflows.
-
-
-## ➡ Secure Authentication & Secret Management
-
-I implemented Snowflake RSA key-pair authentication integrated with Azure Key Vault and Azure Data Factory Managed Identity. This enabled secure automated authentication without relying on passwords or manual MFA interaction during orchestration and CI/CD execution.
-
-## ➡ Orchestration & Automation
-
-I automated and scheduled the complete ELT workflow using Azure Data Factory triggers and orchestration pipelines. The pipeline successfully executed continuously through scheduled triggers while securely retrieving secrets from Azure Key Vault.
-
-## ➡ CI/CD Automation
-
-I developed a fully automated GitHub Actions CI/CD workflow capable of deploying SQL scripts, updating schemas, and orchestrating deployment processes automatically across the environment.
-
-## ➡ Incremental Loading & CDC
-
-I implemented incremental loading strategies using watermarking and CDC techniques to process only newly added or updated records efficiently while improving scalability and reducing unnecessary data processing.
-
-## ➡ Reliability & Validation
-
-I built a multi-layer validation and monitoring framework with comprehensive logging, orchestration monitoring, and fault-tolerant execution processes to improve data integrity and operational reliability.
-
-
-# 🏆 Key Problems Solved
-
-Throughout the project, I solved several real-world cloud engineering and DevOps challenges, including:
-
-* Recovering and reactivating an expired Azure subscription environment
-
-* Troubleshooting Snowflake authentication and MFA-related connection failures
-
-* Regenerating and rotating RSA key pairs securely
-
-* Updating GitHub Actions secrets after private key rotation
-
-* Configuring Azure Managed Identity and Key Vault access permissions
-
-* Revalidating CI/CD deployments after infrastructure recovery
-
-* Debugging path-sensitive deployment and orchestration issues
-
-* Resolving SQL compilation and object creation conflicts
-
-* Ensuring successful incremental data loading using CDC and watermarking techniques
-
-This project was technically challenging because it required integrating multiple cloud platforms, orchestration services, secure authentication methods, CI/CD automation pipelines, and enterprise-level deployment practices into one working architecture.
-
-Successfully designing, troubleshooting, securing, automating, and orchestrating the complete pipeline end-to-end significantly strengthened my practical cloud data engineering, DevOps, and production troubleshooting experience.
-
-
-
-This project follows a structured approach inspired by the CRISP-DM framework, ensuring that the pipeline design aligns with industry best practices for scalable data engineering systems.
-
-✔ CRISP-DM Alignment
-
-CRISP-DM Phase	                  Implementation in This Project
-
-* Business Understanding:         Identify how customer and sales data can generate business insights
-* Data Understanding:             Explore raw CSV datasets containing customer, product, and sales information
-* Data Preparation:               Load raw datasets into Snowflake and clean data in the Staging Layer
-* Modeling:                       Implement dimensional modeling using a star schema
-* Evaluation:                     Perform SQL-based data quality validation checks                                  
-* Deployment                      Automate pipeline execution using Azure Data Factory and CI/CD
-
-
-	                          
-✔ Architecture
-
-The pipeline follows a layered ELT architecture, where raw data is ingested first, and transformations are performed inside the data warehouse.
-
-                    Raw Data (CSV)
-                         │
-                         ▼
-                   RAW Schema
-                         │
-                         ▼
-                 STAGING Schema
-             (Cleaning & Standardisation)
-                         │
-                         ▼
-                ANALYTICS Schema
-              (Star Schema Modelling)
-                         │
-                         ▼
-             Fact & Dimension Tables
-                         │
-                         ▼
-                  KPI Summary Views
-                         │
-                         ▼
-                Business Analytics Views
-
-
-Supporting Schemas
-
-DATA_QUALITY:
-• Validation checks
-• Null checks
-• Duplicate checks
-
-METADATA:
-• Watermark tables
-• Pipeline logging tables
-• Audit tables 
-
-
-This layered architecture ensures:
-
-* Data traceability
-* Transformation transparency
-* Strong data quality controls
-* Analytics-ready datasets
-
-
-✔ Technologies Used
-
-Technology	                  Purpose
-
-• Snowflake:	                  Cloud data warehouse used for storage and transformations
-• SQL:	                          Data cleaning, transformation, and modeling
-• Azure Data Factory:	          Pipeline orchestration and scheduling
-• Git:                            version control system
-• GitHub:	                  hosting platform for git projects or repositories and documentation
-• GitHub Actions:	          CI/CD automation for validating SQL scripts
-• YAML:	                          Pipeline configuration files
-• CSV:	                          Raw input datasets 
-
-
-✔ Data Pipeline Layers
-
-🔰 Raw Layer
-
-The Raw Layer stores ingested datasets in their original format.
-
-Purpose:
-
-• Preserve source data
-• Enable data lineage tracking
-• Provide reproducibility for transformations
-
-Tables in this layer mirror the structure of the source CSV files.
-
-
-🔰 Staging Layer
-
-The Staging Layer prepares the raw data for transformation and modeling.
-
-Key operations include:
-
-• Data cleaning
-• Schema standardization
-• Data type corrections
-
-This layer ensures the data is standardized before analytics modeling. 
-
-
-🔰 Data Quality Layer
-
-The data quality layer validates the integrity of the data.
+The project includes multiple validation layers to improve data reliability.
 
 Validation checks include:
 
-Null value detection
-Duplicate record identification
-Schema validation
-Data consistency checks
+- Null value checks
+- Duplicate detection
+- Table validation
+- Row count validation
+- Schema consistency checks
 
-These checks ensure that only reliable and trustworthy data progresses into the Analytics Layer.
+Validation scripts are stored in:
 
+```text
+tests/data_quality/
+```
 
-🔰 Analytics Layer
+---
 
-The Analytics Layer contains the Final Analytical data model optimized for reporting and insights.
+# 📈 Analytics Layer
 
-The Analytics Layer implements a dimensional star schema consisting of:
+The analytics layer implements a dimensional star schema.
 
-Fact Table:
-fact_sales
+### Fact Table
+- `fact_sales`
 
-Dimension Tables:
-dim_customer
-dim_products
-dim_date
+### Dimension Tables
+- `dim_customer`
+- `dim_products`
+- `dim_date`
 
-This modeling approach simplifies Analytical queries and improves query performance.
+---
 
-🔰 Analytical Views
+# 📊 Analytical Views
 
-On top of the dimensional model, several Analytical views were created to answer key business questions.
+The project includes analytical views such as:
 
-Examples include:
 
 ✅ Sales by country
 
@@ -301,86 +289,9 @@ Examples include:
 
 A global KPI summary view was also created to provide high-level business metrics.
 
-✔ Pipeline Orchestration
+These views support reporting and business analysis.
 
-Pipeline orchestration is implemented using Azure Data Factory.
-
-Azure Data Factory is responsible for:
-
-• Scheduling pipeline execution
-• Automating SQL transformation workflows
-• Managing pipeline dependencies
-• Running the pipeline in the cloud
-
-
-✔ The orchestrated pipeline executes the following workflow:
-
-Load Raw Data
-        ↓
-Run Staging Transformations
-        ↓
-Run Data Quality Checks
-        ↓
-Build Fact Table
-        ↓
-Build Dimension Tables
-        ↓
-Create Analytics Views
-
-
-This ensures the pipeline runs automatically without manual intervention.
-
-
-✔ CI/CD Automation
-
-The project implements Continuous Integration and Continuous Deployment (CI/CD) using GitHub Actions.
-
-The CI/CD workflow automatically:
-
-• Validates SQL scripts
-• Runs pipeline checks
-• Tests data transformations
-• Detects errors before deployment
-
-This ensures that changes to the pipeline code or SQL transformations are tested before being integrated.
-
-✔ Testing and Validation
-
-The tests/ directory contains SQL scripts for output verification. This final stage ensures data integrity across all Analytics tables and views post-execution
-These tests check for:
-
-• Null values in critical columns
-• Duplicate records
-• Expected row counts
-• Table integrity
-
-✅ The multi-layered validation strategy talked about earlier goes as follows:
-
-🔰 In_pipeline_validation (data quality checks within the DQ Layer inside the pipeline)
-
-🔰 Pre-deployment validation (CI/CD implementation through GitHub Actions workflow)
-
-🔰 Post_execution_validation ( reconciliation and output checks to ensure data accuracy after pipeline execution) 
-
-
-These three validation layers collectively form a data reliability engineering framework, widely adopted in modern data platforms
-
-
-These validations ensure that the pipeline maintains strong data quality standards.
-
-Configuration Management
-
-✔ Pipeline configurations are stored in a dedicated configuration folder.
-
-This includes:
-
-• Pipeline settings
-• Environment variables
-• YAML configuration files
-
-Separating configuration from code improves maintainability and scalability.
-
-
+---
 
 ## 📂 Repository Structure
 
@@ -453,24 +364,11 @@ Customer_Analytics_Data_pipeline
 └── README.md
 ```
 
+---
 
+# 📸 Project Screenshots
 
-##  📊 Architecture Diagram
-
-![Architecture](docs/Architecture.png)
-
-
-##  🔄 ELT Workflow
-
-![ELT_Workflow](docs/ELT_workflow.png)
-
-
-##  ⚙️ ADF Pipeline
-
-![adf_pipeline_orchestration_diagram](docs/adf_pipeline_orchestration_diagram.png)
-
-
-##  ⚒ Orchestration 
+##  ⚒ Orchestration
 
 ###  ✅ adf_pipeline_runs
 
@@ -488,55 +386,57 @@ Customer_Analytics_Data_pipeline
 
 ![Key Vault integration](adf/screenshots/key_vault_linked_service.png)
 
+---
 
+# 🧠 Engineering Challenges Solved
 
-✔ Monitoring & Observability
+During this project, I worked through several real-world engineering challenges, including:
 
-Pipeline monitoring is supported through logging tables that capture pipeline errors and execution metadata.
+- Snowflake authentication troubleshooting
+- RSA key rotation
+- CI/CD deployment validation
+- Incremental loading implementation
+- Azure Key Vault access configuration
+- SQL deployment conflict resolution
+- Pipeline orchestration debugging
 
-These logs allow engineers to audit pipeline execution and diagnose failures.
-This modular structure ensures the project remains organized, scalable, and easy to maintain.
+These experiences helped strengthen my practical cloud data engineering and troubleshooting skills.
 
-✔ Python Automation 
+---
 
-While a Python-based automation layer could be integrated into this workflow, it is considered an optional enhancement for this specific project.
-This Layer was intentionally excluded to maintain a streamlined architecture, as Python automation typically serves more advanced requirements, such as: 
+# 🎯 Skills Demonstrated
 
-• pipeline monitoring
-• automated deployments
-• advanced data ingestion
-• API integrations
+- Data Engineering
+- ELT Pipeline Development
+- Cloud Data Warehousing
+- CI/CD Automation
+- Azure Data Factory
+- Snowflake SQL Development
+- Incremental Loading
+- Data Quality Engineering
+- Dimensional Modeling
+- GitHub Actions
 
-Since the pipeline already includes SQL transformations, Azure Data Factory orchestration, and CI/CD automation, the core objectives of the project were completed without requiring Python automation.
+---
 
-✔ Summary
+# 👤 Author
 
-This project demonstrates the design and implementation of a modern ELT data engineering pipeline using:
+**Kidima Medy Masuka**
 
-• Snowflake for data warehousing
-• Azure Data Factory for orchestration
-• GitHub Actions for CI/CD
-• SQL for data transformation and modeling
-
-By combining layered architecture, dimensional modeling, automated workflows, and data quality validation, the pipeline represents a scalable and production-ready framework for customer data analytics.
-
-
-👤 Author
-
-Kidima Medy Masuka 
-
-Junior Data Engineer 
+Junior Data Engineer
 
 Focused on:
+- Data Engineering
+- Data Analytics
+- Machine Learning
+- Data-Driven Decision Making
 
-• Data engineering
-• Data analytics
-• Machine learning
-• Data-driven decision making
+---
 
+# 📌 Portfolio Note
 
-Usage & Attribution: This project is shared for educational and portfolio purposes.
+This project was built for educational and portfolio purposes to demonstrate practical cloud data engineering skills using modern data platform technologies.
+
 If reused or adapted, appropriate credit must be given to the author.
-
 
 📰This project is part of my personal data science and analytics portfolio ✅
